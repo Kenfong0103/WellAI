@@ -4,9 +4,9 @@ import joblib
 import pandas as pd
 
 # Load the trained models
-cardio = joblib.load("C:\\Users\\kenye\\PycharmProjects\\pythonProject\\cardio_prediction_model.joblib")
-diabetes = joblib.load("C:\\Users\\kenye\\PycharmProjects\\pythonProject\\diabetes_prediction_model.joblib")
-stroke = joblib.load("C:\\Users\\kenye\\PycharmProjects\\pythonProject\\stroke_prediction_model.joblib")
+cardio = joblib.load("cardio_prediction_model.joblib")
+diabetes = joblib.load("diabetes_prediction_model.joblib")
+stroke = joblib.load("stroke_prediction_model.joblib")
 
 
 def Code(original_value):
