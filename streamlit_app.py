@@ -1,15 +1,24 @@
 import streamlit as st
-import pickle
-import joblib
+from streamlit_gsheets import GSheetsConnection
 import pandas as pd
+import joblib
+
+# Establishing a Google Sheets connection
+conn = st.connection("gsheets", type=GSheetsConnection)
 
 # Load the trained models
 cardio = joblib.load("cardio_prediction_model.joblib")
 diabetes = joblib.load("diabetes_prediction_model.joblib")
 stroke = joblib.load("stroke_prediction_model.joblib")
 
+# Function to fetch existing user data from Google Sheets
+def fetch_existing_data():
+    existing_data = conn.read(worksheet="WellAI", ttl=5)
+    existing_data = existing_data.dropna(how="all")
+    return existing_data
 
-def Code(original_value):
+# Function to encode categorical values
+def code(original_value):
     mapping = {
         'Male': 1,
         'Female': 0,
@@ -34,13 +43,11 @@ def Code(original_value):
     encoded_value = mapping.get(original_value, None)
     return encoded_value
 
-
+# Function to make predictions
 def predict(gender, age, hypertension, heart_disease, ever_married,
-            work_type, Residence_type,
-            bmi, smoking_status, HbA1c_level,
-            cholesterol, alco, gluc_encoded,
-            active):
-    # Create a DataFrame to hold the input features
+            work_type, Residence_type, bmi, smoking_status, HbA1c_level,
+            cholesterol, gluc_encoded, alco, active):
+    # Create DataFrames for input features
     input_stroke = pd.DataFrame({
         'gender': [gender],
         'age': [age],
@@ -105,70 +112,101 @@ def predict(gender, age, hypertension, heart_disease, ever_married,
 
     return predictions
 
-
+# Main function
 def main():
-    style = """<div style='background-color:skyblue; padding:12px'>
-              <h1 style='color:black'>DISEASE PREDICTION</h1>
-       </div>"""
-    st.markdown(style, unsafe_allow_html=True)
-    left, right, re = st.columns(3)
-    gender = left.selectbox('Gender', ('Male', 'Female'))
-    gender_encoded = Code(gender)
+    # Display Title and Description
+    st.title("Health Prediction")
+    st.markdown("Enter your details below.")
 
-    age = right.number_input('Age',
-                             step=1.0, format="%.2f", value=1.0)
+    # Fetch existing user data
+    existing_data = fetch_existing_data()
 
-    hypertension = left.selectbox('Hypertension', ('Yes', 'No'))
-    hypertension_encoded = Code(hypertension)
+    # Onboarding New User Form
+    with st.form(key="user_form"):
+        # User details inputs
+        name = st.text_input(label="Your Name*")
+        address = st.text_area(label="Your Address")
+        contact_number = st.text_input(label="Contact Number*")
 
-    heart_disease = right.selectbox('Heart Disease', ('Yes', 'No'))
-    heart_disease_encoded = Code(heart_disease)
+        # Health prediction inputs
+        gender = st.selectbox('Gender', ('Male', 'Female'))
+        age = st.number_input('Age', step=1, min_value=0)
+        hypertension = st.selectbox('Hypertension', ('Yes', 'No'))
+        heart_disease = st.selectbox('Heart Disease', ('Yes', 'No'))
+        ever_married = st.selectbox('Ever Married', ('Yes', 'No'))
+        work_type = st.selectbox('Work Type', ('Govt_job', 'Private', 'Self-employed'))
+        Residence_type = st.selectbox('Residence Type', ('Rural', 'Urban'))
+        bmi = st.number_input('BMI', step=0.1, value=0.0)
+        smoking_status = st.selectbox('Smoking Status', ('never smoked', 'formerly smoked', 'smokes', 'Unknown'))
+        HbA1c_level = st.number_input('HbA1c level', step=0.1, value=0.0)
+        cholesterol = st.selectbox('Cholesterol', ('Normal', 'Above normal', 'Well above normal'))
+        gluc = st.selectbox('Glucose', ('Normal', 'Above normal', 'Well above normal'))
+        alco = st.selectbox('Alcohol intake', ('Yes', 'No'))
+        active = st.selectbox('Physical activity', ('Yes', 'No'))
 
-    ever_married = left.selectbox('Ever Married', ('Yes', 'No'))
-    ever_married_encoded = Code(ever_married)
+        # Mark mandatory fields
+        st.markdown("**required*")
 
-    work_type = right.selectbox('Work Type', ('Children', 'Govt_job', 'Never_worked', 'Private', 'Self-employed'))
-    work_type_encoded = Code(work_type)
+        submit_button = st.form_submit_button(label="Submit Details")
 
-    Residence_type = left.selectbox('Residence Type', ('Rural', 'Urban'))
-    Residence_type_encoded = Code(Residence_type)
+        # If the submit button is pressed
+        if submit_button:
+            # Check if all mandatory fields are filled
+            if not name or not contact_number:
+                st.warning("Ensure all mandatory fields are filled.")
+                st.stop()
+            else:
+                # Make predictions
+                predictions = predict(code(gender), age, code(hypertension), code(heart_disease),
+                                      code(ever_married), code(work_type), code(Residence_type), bmi,
+                                      code(smoking_status), HbA1c_level, code(cholesterol), code(gluc), code(alco),
+                                      code(active))
 
-    bmi = left.number_input('BMI',
-                            step=1.0, format="%.2f", value=1.0)
+                # Create a new row of user data
+                new_user_data = pd.DataFrame({
+                    "Name": [name],
+                    "Address": [address],
+                    "ContactNumber": [contact_number],
+                    "Gender": [gender],
+                    "Age": [age],
+                    "Hypertension": [hypertension],
+                    "HeartDisease": [heart_disease],
+                    "EverMarried": [ever_married],
+                    "WorkType": [work_type],
+                    "ResidenceType": [Residence_type],
+                    "BMI": [bmi],
+                    "SmokingStatus": [smoking_status],
+                    "HbA1cLevel": [HbA1c_level],
+                    "Cholesterol": [cholesterol],
+                    "Glucose": [gluc],
+                    "AlcoholIntake": [alco],
+                    "PhysicalActivity": [active]
+                })
 
-    smoking_status = right.selectbox('Smoking Status', ('never smoked', 'formerly smoked', 'smokes', 'Unknown'))
-    smoking_status_encoded = Code(smoking_status)
+                # Append the predictions to the user data
+                for model, prob in predictions.items():
+                    new_user_data[model + '_Probability'] = prob
 
-    HbA1c_level = left.number_input('HbA1c level',
-                                    step=1.0, format="%.2f", value=1.0)
+                # Append the new user data to the existing data
+                updated_data = existing_data.append(new_user_data, ignore_index=True)
 
-    cholesterol = right.selectbox('Cholesterol', ('Normal', 'Above normal', 'Well above normal'))
-    cholesterol_encoded = Code(cholesterol)
+                # Select only the necessary columns for updating in Google Sheets
+                columns_to_update = ['Name', 'Address', 'ContactNumber', 'Gender', 'Age', 'Hypertension', 'HeartDisease',
+                                     'EverMarried', 'WorkType', 'ResidenceType', 'BMI', 'SmokingStatus', 'HbA1cLevel',
+                                     'Cholesterol', 'Glucose', 'AlcoholIntake', 'PhysicalActivity',
+                                     'Stroke_Probability', 'Cardio_Probability', 'Diabetes_Probability']
 
-    gluc = left.selectbox('Glucose', ('Normal', 'Above normal', 'Well above normal'))
-    gluc_encoded = Code(gluc)
+                # Update Google Sheets with the selected columns
+                conn.update(worksheet="WellAI", data=updated_data[columns_to_update])
 
-    alco = right.selectbox('Alcohol intake', ('Yes', 'No'))
-    alco_encoded = Code(alco)
+                # Display the prediction results
+                st.subheader("Prediction Results:")
+                for model, prob in predictions.items():
+                    st.write(f"{model} Probability: {prob:.2f}%")
 
-    active = right.selectbox('Physical activity', ('Yes', 'No'))
-    active_encoded = Code(active)
+                # Display success message
+                st.success("Your details and predictions have been successfully submitted!")
 
-    # Add a button to make predictions
-    button = st.button("Predict")
-
-    # if button is pressed
-    if button:
-
-        # make prediction
-        predictions = predict(gender_encoded, age, hypertension_encoded,
-                              heart_disease_encoded, ever_married_encoded, work_type_encoded, Residence_type_encoded,
-                              bmi, smoking_status_encoded,
-                              HbA1c_level, cholesterol_encoded,
-                              alco_encoded, gluc_encoded, active_encoded)
-        for x, prob in predictions.items():
-            re.success(f'{x} Probability: {prob:.2f}%')  # Display the predictions for each model
-
-
+# Run the main function
 if __name__ == "__main__":
     main()
