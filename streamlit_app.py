@@ -7,9 +7,9 @@ import joblib
 conn = st.connection("gsheets", type=GSheetsConnection)
 
 # Load the trained models
-cardio = joblib.load("cardio_prediction_model.joblib")
-diabetes = joblib.load("diabetes_prediction_model.joblib")
-stroke = joblib.load("stroke_prediction_model.joblib")
+cardio = joblib.load("C:\\Users\\kenye\\PycharmProjects\\pythonProject\\cardio_prediction_model.joblib")
+diabetes = joblib.load("C:\\Users\\kenye\\PycharmProjects\\pythonProject\\diabetes_prediction_model.joblib")
+stroke = joblib.load("C:\\Users\\kenye\\PycharmProjects\\pythonProject\\stroke_prediction_model.joblib")
 
 # Function to fetch existing user data from Google Sheets
 def fetch_existing_data():
@@ -47,7 +47,31 @@ def code(original_value):
 def predict(gender, age, hypertension, heart_disease, ever_married,
             work_type, Residence_type, bmi, smoking_status, HbA1c_level,
             cholesterol, gluc_encoded, alco, active):
-    # Create DataFrames for input features
+    # Check if HbA1c_level is below 3 or above 7
+    if HbA1c_level < 3:
+        diabetes_pred_prob = 0.0
+    elif HbA1c_level >= 7:
+        diabetes_pred_prob = 1.0
+    else:
+        # Create DataFrame for input features
+        input_diabetes = pd.DataFrame({
+            'gender': [gender],
+            'age': [age],
+            'hypertension': [hypertension],
+            'heart_disease': [heart_disease],
+            'smoking_history': [smoking_status],
+            'bmi': [bmi],
+            'HbA1c_level': [HbA1c_level],
+            'gluc': [gluc_encoded]
+        })
+
+        # Make prediction using diabetes model
+        diabetes_pred_prob = diabetes.predict(input_diabetes)[0]
+
+        # Clip the probability to range [0, 1]
+        diabetes_pred_prob = max(0.0, min(1.0, diabetes_pred_prob))
+
+    # Make predictions using stroke and cardio models
     input_stroke = pd.DataFrame({
         'gender': [gender],
         'age': [age],
@@ -73,21 +97,8 @@ def predict(gender, age, hypertension, heart_disease, ever_married,
         'bmi': [bmi]
     })
 
-    input_diabetes = pd.DataFrame({
-        'gender': [gender],
-        'age': [age],
-        'hypertension': [hypertension],
-        'heart_disease': [heart_disease],
-        'smoking_history': [smoking_status],
-        'bmi': [bmi],
-        'HbA1c_level': [HbA1c_level],
-        'gluc': [gluc_encoded]
-    })
-
-    # Make predictions using all the models
     stroke_pred_prob = stroke.predict(input_stroke)
     cardio_pred_prob = cardio.predict(input_cardio)
-    diabetes_pred_prob = diabetes.predict(input_diabetes)
 
     if stroke_pred_prob[0] < 0:
         stroke_pred_prob[0] = 0.00
@@ -99,15 +110,11 @@ def predict(gender, age, hypertension, heart_disease, ever_married,
     elif cardio_pred_prob[0] > 100:
         cardio_pred_prob[0] = 1.00
 
-    if diabetes_pred_prob[0] < 0:
-        diabetes_pred_prob[0] = 0.00
-    elif diabetes_pred_prob[0] > 100:
-        diabetes_pred_prob[0] = 1.00
-
+    # Format predictions
     predictions = {
         'Stroke': stroke_pred_prob[0] * 100,
         'Cardio': cardio_pred_prob[0] * 100,
-        'Diabetes': diabetes_pred_prob[0] * 100
+        'Diabetes': diabetes_pred_prob * 100
     }
 
     return predictions
@@ -126,7 +133,11 @@ def main():
         # User details inputs
         name = st.text_input(label="Your Name*")
         address = st.text_area(label="Your Address")
-        contact_number = st.text_input(label="Contact Number*")
+        # Modify the contact number input section
+        contact_number = st.text_input(label="Contact Number (Example: 010-1234567)*", max_chars=11)
+
+        # Fill with leading zeros if necessary
+        contact_number = contact_number.zfill(11)
 
         # Health prediction inputs
         gender = st.selectbox('Gender', ('Male', 'Female'))
