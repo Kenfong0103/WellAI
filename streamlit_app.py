@@ -134,10 +134,10 @@ def main():
         name = st.text_input(label="Your Name*")
         address = st.text_area(label="Your Address")
         # Modify the contact number input section
-        contact_number = st.text_input(label="Contact Number (Example: 010-1234567)*", max_chars=11)
+        contact_number = st.text_input(label="Contact Number (Example: 010-1234567)*", max_chars=12)
 
         # Fill with leading zeros if necessary
-        contact_number = contact_number.zfill(11)
+        contact_number = contact_number.zfill(12)
 
         # Health prediction inputs
         gender = st.selectbox('Gender', ('Male', 'Female'))
