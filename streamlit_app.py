@@ -50,7 +50,7 @@ def predict(gender, age, hypertension, heart_disease, ever_married,
     # Check if HbA1c_level is below 3 or above 7
     if HbA1c_level < 3:
         diabetes_pred_prob = 0.0
-    elif HbA1c_level >= 7:
+    elif HbA1c_level >= 6.5:
         diabetes_pred_prob = 1.0
     else:
         # Create DataFrame for input features
