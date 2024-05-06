@@ -137,7 +137,7 @@ def main():
         contact_number = st.text_input(label="Contact Number (Example: 010-1234567)*", max_chars=12)
 
         # Fill with leading zeros if necessary
-        contact_number = contact_number.zfill(12)
+        contact_number = contact_number.zfill(11)
 
         # Health prediction inputs
         gender = st.selectbox('Gender', ('Male', 'Female'))
