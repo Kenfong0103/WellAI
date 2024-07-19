@@ -1,3 +1,4 @@
+pip==24.1.2
 streamlit==1.22.0
 st-gsheets-connection
 joblib
