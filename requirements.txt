@@ -1,5 +1,5 @@
-streamlit==1.22.0
-st-gsheets-connection==0.0.4
-joblib==1.4.2
-scikit-learn==1.5.1
-pandas==1.4.2
+streamlit
+st-gsheets-connection
+joblib
+scikit-learn
+pandas
