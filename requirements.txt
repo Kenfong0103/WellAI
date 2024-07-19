@@ -1,6 +1,7 @@
-streamlit
+streamlit==1.10.0
 st-gsheets-connection
 joblib
 scikit-learn
-pandas
-numpy==1.26.4
+pandas==1.4.2
+gspread==5.4.0
+gspread_dataframe==3.0.8
