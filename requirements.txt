@@ -2,4 +2,4 @@ streamlit==1.22.0
 st-gsheets-connection
 joblib
 scikit-learn
-pandas==2.1.1
+pandas
