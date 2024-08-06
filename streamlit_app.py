@@ -146,7 +146,7 @@ def main():
         hypertension = st.selectbox('Hypertension', ('Yes', 'No'))
         heart_disease = st.selectbox('Heart Disease', ('Yes', 'No'))
         ever_married = st.selectbox('Ever Married', ('Yes', 'No'))
-        work_type = st.selectbox('Work Type', ('Govt_job', 'Private', 'Self-employed'))
+        work_type = st.selectbox('Work Type', ('Children', 'Govt_job', 'Never_worked', 'Private', 'Self-employed'))
         Residence_type = st.selectbox('Residence Type', ('Rural', 'Urban'))
         bmi = st.number_input('BMI', step=0.1, value=0.0)
         smoking_status = st.selectbox('Smoking Status', ('never smoked', 'formerly smoked', 'smokes', 'Unknown'))
