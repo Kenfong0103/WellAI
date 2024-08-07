@@ -79,7 +79,8 @@ with st.form(key="user_form"):
     submit_button = st.form_submit_button(label="Submit")
 
 # Preprocess the input data
-def preprocess_input_for_cardio(gender, age, cholesterol, blood_glucose_level, smoking_status, alcohol_intake, physical_activity):
+def preprocess_input_for_cardio(gender, age, cholesterol, blood_glucose_level, smoking_status, alcohol_intake,
+                                physical_activity):
     gender_encoded = 1 if gender == 'Male' else 0
     cholesterol_encoded = cholesterol_mapping[cholesterol]
     glucose_encoded = glucose_mapping[blood_glucose_level]
@@ -88,16 +89,18 @@ def preprocess_input_for_cardio(gender, age, cholesterol, blood_glucose_level, s
     physical_activity_encoded = binary_mapping[physical_activity]
 
     return pd.DataFrame({
-        'age': [age],
-        'gender': [gender_encoded],
-        'cholesterol': [cholesterol_encoded],
-        'gluc': [glucose_encoded],
-        'smoke': [smoking_status_encoded],
-        'alco': [alcohol_intake_encoded],
-        'active': [physical_activity_encoded]
+        'Age': [age],
+        'Gender': [gender_encoded],
+        'Cholesterol': [cholesterol_encoded],
+        'Glucose': [glucose_encoded],
+        'Smoking_Status': [smoking_status_encoded],
+        'Alcohol Intake': [alcohol_intake_encoded],
+        'Physical Activity': [physical_activity_encoded]
     })
 
-def preprocess_input_for_stroke(gender, age, hypertension, heart_disease, ever_married, work_type, residence_type, blood_glucose_level, bmi, smoking_status):
+
+def preprocess_input_for_stroke(gender, age, hypertension, heart_disease, ever_married, work_type, residence_type,
+                                blood_glucose_level, bmi, smoking_status):
     gender_encoded = 1 if gender == 'Male' else 0
     hypertension_encoded = binary_mapping[hypertension]
     heart_disease_encoded = binary_mapping[heart_disease]
@@ -108,19 +111,21 @@ def preprocess_input_for_stroke(gender, age, hypertension, heart_disease, ever_m
     smoking_status_encoded = smoking_status_mapping[smoking_status]
 
     return pd.DataFrame({
-        'gender': [gender_encoded],
-        'age': [age],
-        'hypertension': [hypertension_encoded],
-        'heart_disease': [heart_disease_encoded],
-        'ever_married': [ever_married_encoded],
-        'work_type': [work_type_encoded],
-        'Residence_type': [residence_type_encoded],
-        'gluc': [glucose_encoded],
-        'bmi': [bmi],
-        'smoking_status': [smoking_status_encoded]
+        'Gender': [gender_encoded],
+        'Age': [age],
+        'Hypertension': [hypertension_encoded],
+        'Heart_disease': [heart_disease_encoded],
+        'Ever_Married': [ever_married_encoded],
+        'Work_Type': [work_type_encoded],
+        'Residence_Type': [residence_type_encoded],
+        'Glucose': [glucose_encoded],
+        'BMI': [bmi],
+        'Smoking_Status': [smoking_status_encoded]
     })
 
-def preprocess_input_for_diabetes(gender, age, hypertension, heart_disease, smoking_status, bmi, HbA1c_level, blood_glucose_level):
+
+def preprocess_input_for_diabetes(gender, age, hypertension, heart_disease, smoking_status, bmi, HbA1c_level,
+                                  blood_glucose_level):
     gender_encoded = 1 if gender == 'Male' else 0
     hypertension_encoded = binary_mapping[hypertension]
     heart_disease_encoded = binary_mapping[heart_disease]
@@ -128,14 +133,14 @@ def preprocess_input_for_diabetes(gender, age, hypertension, heart_disease, smok
     glucose_encoded = glucose_mapping[blood_glucose_level]
 
     return pd.DataFrame({
-        'gender': [gender_encoded],
-        'age': [age],
-        'hypertension': [hypertension_encoded],
-        'heart_disease': [heart_disease_encoded],
-        'smoking_history': [smoking_status_encoded],
-        'bmi': [bmi],
+        'Gender': [gender_encoded],
+        'Age': [age],
+        'Hypertension': [hypertension_encoded],
+        'Heart_disease': [heart_disease_encoded],
+        'Smoking_Status': [smoking_status_encoded],
+        'BMI': [bmi],
         'HbA1c_level': [HbA1c_level],
-        'gluc': [glucose_encoded]
+        'Glucose': [glucose_encoded]
     })
 
 # Prediction function
@@ -153,15 +158,18 @@ if submit_button:
         st.stop()
     else:
         # Cardio prediction
-        cardio_input_data = preprocess_input_for_cardio(gender, age, cholesterol, blood_glucose_level, smoking_status, alcohol_intake, physical_activity)
+        cardio_input_data = preprocess_input_for_cardio(gender, age, cholesterol, blood_glucose_level, smoking_status,
+                                                        alcohol_intake, physical_activity)
         cardio_prob = make_predictions(cardio_model, cardio_input_data, "cardio")
 
         # Stroke prediction
-        stroke_input_data = preprocess_input_for_stroke(gender, age, hypertension, heart_disease, ever_married, work_type, residence_type, blood_glucose_level, bmi, smoking_status)
+        stroke_input_data = preprocess_input_for_stroke(gender, age, hypertension, heart_disease, ever_married, work_type,
+                                                        residence_type, blood_glucose_level, bmi, smoking_status)
         stroke_prob = make_predictions(stroke_model, stroke_input_data, "stroke")
 
         # Diabetes prediction
-        diabetes_input_data = preprocess_input_for_diabetes(gender, age, hypertension, heart_disease, smoking_status, bmi, HbA1c_level, blood_glucose_level)
+        diabetes_input_data = preprocess_input_for_diabetes(gender, age, hypertension, heart_disease, smoking_status, bmi,
+                                                            HbA1c_level, blood_glucose_level)
         diabetes_prob = make_predictions(diabetes_model, diabetes_input_data, "diabetes")
 
         # Append the predictions to the user data
@@ -191,21 +199,15 @@ if submit_button:
         # Read existing data from the Google Sheets
         existing_data = conn.read(worksheet="WellAI")
 
-        st.write("Existing data:")
-        st.write(existing_data)
-
         if existing_data.empty:
             # If the sheet is empty, initialize with headers
-            st.write("Sheet is empty. Initializing with headers.")
             existing_data = pd.DataFrame(columns=new_user_data.columns)
         
         # Append the new user data to the existing data
         updated_data = pd.concat([existing_data, new_user_data], ignore_index=True)
 
-        st.write("Updated data:")
-        st.write(updated_data)
-
         # Update Google Sheets with the combined data
         conn.update(worksheet="WellAI", data=updated_data)
 
+        # Display success message
         st.success("Your details and predictions have been successfully submitted!")
