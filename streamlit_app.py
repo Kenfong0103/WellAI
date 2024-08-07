@@ -172,7 +172,7 @@ if submit_button:
                                                             HbA1c_level, blood_glucose_level)
         diabetes_prob = make_predictions(diabetes_model, diabetes_input_data, "diabetes")
 
-        # Append the predictions to the user data
+        # Create a DataFrame for new user data
         new_user_data = pd.DataFrame({
             "Name": [name],
             "Address": [address],
@@ -197,17 +197,23 @@ if submit_button:
         })
 
         # Read existing data from the Google Sheets
-        existing_data = conn.read(worksheet="WellAI")
-
-        # Convert the existing data to a DataFrame if it is not already one
-        if isinstance(existing_data, list):
-            existing_data = pd.DataFrame(existing_data)
+        try:
+            existing_data = conn.read(worksheet="WellAI", header=None)
+            if isinstance(existing_data, list):
+                existing_data = pd.DataFrame(existing_data[1:], columns=existing_data[0])
+        except Exception as e:
+            st.error(f"Error reading from Google Sheets: {e}")
+            st.stop()
 
         # Append the new user data to the existing data
-        updated_data = pd.concat([existing_data, new_user_data], ignore_index=True)
+        if existing_data.empty:
+            updated_data = new_user_data
+        else:
+            updated_data = pd.concat([existing_data, new_user_data], ignore_index=True)
 
-        # Update Google Sheets with the combined data
-        conn.update(worksheet="WellAI", data=updated_data)
-
-        # Display success message
-        st.success("Your details and predictions have been successfully submitted!")
+        # Write the updated data back to Google Sheets
+        try:
+            conn.update(worksheet="WellAI", data=updated_data)
+            st.success("Your details and predictions have been successfully submitted!")
+        except Exception as e:
+            st.error(f"Error updating Google Sheets: {e}")
