@@ -199,6 +199,10 @@ if submit_button:
         # Read existing data from the Google Sheets
         existing_data = conn.read(worksheet="WellAI")
 
+        # Convert the existing data to a DataFrame if it is not already one
+        if isinstance(existing_data, list):
+            existing_data = pd.DataFrame(existing_data)
+
         # Append the new user data to the existing data
         updated_data = pd.concat([existing_data, new_user_data], ignore_index=True)
 
