@@ -8,9 +8,9 @@ import numpy
 conn = st.connection("gsheets", type=GSheetsConnection)
 
 # Load the trained models
-cardio = joblib.load("cardio_prediction_model.joblib")
-diabetes = joblib.load("diabetes_prediction_model.joblib")
-stroke = joblib.load("stroke_prediction_model.joblib")
+cardio = joblib.load("cardio_model.joblib")
+diabetes = joblib.load("diabetes_model.joblib")
+stroke = joblib.load("stroke_model.joblib")
 
 # Function to fetch existing user data from Google Sheets
 def fetch_existing_data():
