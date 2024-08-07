@@ -1,6 +1,10 @@
 import streamlit as st
+from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 import joblib
+
+# Establishing a Google Sheets connection
+conn = st.connection("gsheets", type=GSheetsConnection)
 
 # Load the trained models
 cardio_model = joblib.load("cardio_model.joblib")
@@ -48,21 +52,31 @@ binary_mapping = {
 }
 
 # Define the input fields
-gender = st.selectbox('Gender', ['Male', 'Female'])
-age = st.slider('Age', 0, 100, 0)
-hypertension = st.selectbox('Hypertension', ['Yes', 'No'])
-heart_disease = st.selectbox('Heart Disease', ['Yes', 'No'])
-ever_married = st.selectbox('Ever Married', ['Yes', 'No'])
-work_type = st.selectbox('Work Type', list(work_type_mapping.keys()))
-residence_type = st.selectbox('Residence Type', list(residence_type_mapping.keys()))
-blood_glucose_level = st.selectbox('Blood Glucose Level Category', list(glucose_mapping.keys()))
-cholesterol = st.selectbox('Cholesterol', list(cholesterol_mapping.keys()))
-smoking_status = st.selectbox('Smoking Status', list(smoking_status_mapping.keys()))
-alcohol_intake = st.selectbox('Alcohol Intake', ['Yes', 'No'])
-physical_activity = st.selectbox('Physical Activity', ['Yes', 'No'])
-bmi = st.number_input('BMI', min_value=0.0, max_value=50.0, value=0.0)
-HbA1c_level = st.number_input('HbA1c Level', min_value=0.0, max_value=20.0, value=0.0)
+with st.form(key="user_form"):
+    # New fields
+    name = st.text_input(label="Your Name*")
+    address = st.text_area(label="Your Address")
+    contact_number = st.text_input(label="Contact Number (Example: 010-1234567)*", max_chars=12)
 
+    # Fill with leading zeros if necessary
+    contact_number = contact_number.zfill(11)
+
+    gender = st.selectbox('Gender', ['Male', 'Female'])
+    age = st.slider('Age', 0, 100, 0)
+    hypertension = st.selectbox('Hypertension', ['Yes', 'No'])
+    heart_disease = st.selectbox('Heart Disease', ['Yes', 'No'])
+    ever_married = st.selectbox('Ever Married', ['Yes', 'No'])
+    work_type = st.selectbox('Work Type', list(work_type_mapping.keys()))
+    residence_type = st.selectbox('Residence Type', list(residence_type_mapping.keys()))
+    blood_glucose_level = st.selectbox('Blood Glucose Level Category', list(glucose_mapping.keys()))
+    cholesterol = st.selectbox('Cholesterol', list(cholesterol_mapping.keys()))
+    smoking_status = st.selectbox('Smoking Status', list(smoking_status_mapping.keys()))
+    alcohol_intake = st.selectbox('Alcohol Intake', ['Yes', 'No'])
+    physical_activity = st.selectbox('Physical Activity', ['Yes', 'No'])
+    bmi = st.number_input('BMI', min_value=0.0, max_value=50.0, value=0.0)
+    HbA1c_level = st.number_input('HbA1c Level', min_value=0.0, max_value=20.0, value=0.0)
+
+    submit_button = st.form_submit_button(label="Submit")
 
 # Preprocess the input data
 def preprocess_input_for_cardio(gender, age, cholesterol, blood_glucose_level, smoking_status, alcohol_intake,
@@ -129,27 +143,67 @@ def preprocess_input_for_diabetes(gender, age, hypertension, heart_disease, smok
         'Glucose': [glucose_encoded]
     })
 
-
 # Prediction function
 def make_predictions(model, input_data, condition_name):
     predicted_prob = model.predict_proba(input_data)[:, 1]
     predicted_prob_percent = predicted_prob * 100
     st.write(f"Predicted probability of {condition_name}: {predicted_prob_percent[0]:.2f}%")
+    return predicted_prob_percent[0]
 
+# If the submit button is pressed
+if submit_button:
+    # Check if all mandatory fields are filled
+    if not name or not contact_number:
+        st.warning("Ensure all mandatory fields are filled.")
+        st.stop()
+    else:
+        # Cardio prediction
+        cardio_input_data = preprocess_input_for_cardio(gender, age, cholesterol, blood_glucose_level, smoking_status,
+                                                        alcohol_intake, physical_activity)
+        cardio_prob = make_predictions(cardio_model, cardio_input_data, "cardio")
 
-# Add a submit button and display results on click
-if st.button("Submit"):
-    # Cardio prediction
-    cardio_input_data = preprocess_input_for_cardio(gender, age, cholesterol, blood_glucose_level, smoking_status,
-                                                    alcohol_intake, physical_activity)
-    make_predictions(cardio_model, cardio_input_data, "cardio")
+        # Stroke prediction
+        stroke_input_data = preprocess_input_for_stroke(gender, age, hypertension, heart_disease, ever_married, work_type,
+                                                        residence_type, blood_glucose_level, bmi, smoking_status)
+        stroke_prob = make_predictions(stroke_model, stroke_input_data, "stroke")
 
-    # Stroke prediction
-    stroke_input_data = preprocess_input_for_stroke(gender, age, hypertension, heart_disease, ever_married, work_type,
-                                                    residence_type, blood_glucose_level, bmi, smoking_status)
-    make_predictions(stroke_model, stroke_input_data, "stroke")
+        # Diabetes prediction
+        diabetes_input_data = preprocess_input_for_diabetes(gender, age, hypertension, heart_disease, smoking_status, bmi,
+                                                            HbA1c_level, blood_glucose_level)
+        diabetes_prob = make_predictions(diabetes_model, diabetes_input_data, "diabetes")
 
-    # Diabetes prediction
-    diabetes_input_data = preprocess_input_for_diabetes(gender, age, hypertension, heart_disease, smoking_status, bmi,
-                                                        HbA1c_level, blood_glucose_level)
-    make_predictions(diabetes_model, diabetes_input_data, "diabetes")
+        # Append the predictions to the user data
+        new_user_data = pd.DataFrame({
+            "Name": [name],
+            "Address": [address],
+            "ContactNumber": [contact_number],
+            "Gender": [gender],
+            "Age": [age],
+            "Hypertension": [hypertension],
+            "HeartDisease": [heart_disease],
+            "EverMarried": [ever_married],
+            "WorkType": [work_type],
+            "ResidenceType": [residence_type],
+            "BMI": [bmi],
+            "SmokingStatus": [smoking_status],
+            "HbA1cLevel": [HbA1c_level],
+            "Cholesterol": [cholesterol],
+            "Glucose": [blood_glucose_level],
+            "AlcoholIntake": [alcohol_intake],
+            "PhysicalActivity": [physical_activity],
+            "Cardio_Probability": [cardio_prob],
+            "Stroke_Probability": [stroke_prob],
+            "Diabetes_Probability": [diabetes_prob]
+        })
+
+        # Read the existing data from Google Sheets
+        sheet_df = conn.read(worksheet="WellAI")
+
+        # Append new data to the existing data
+        updated_df = pd.concat([sheet_df, new_user_data], ignore_index=True)
+
+        # Update Google Sheets with the combined data
+        conn.update(worksheet="WellAI", data=updated_df)
+
+        # Display success message
+        st.success("Your details and predictions have been successfully submitted!")
