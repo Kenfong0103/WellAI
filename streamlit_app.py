@@ -1,18 +1,8 @@
 import streamlit as st
-from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 import joblib
-
-# Establishing a Google Sheets connection
-conn = st.connection("gsheets", type=GSheetsConnection)
-
-# Load the trained models
-cardio_model = joblib.load("cardio_model.joblib")
-stroke_model = joblib.load("stroke_model.joblib")
-diabetes_model = joblib.load("diabetes_model.joblib")
-
-# Create the Streamlit app
-st.title("Health Prediction App")
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 
 # Define mappings for categorical variables
 glucose_mapping = {
@@ -50,6 +40,14 @@ binary_mapping = {
     'Yes': 1,
     'No': 0
 }
+
+# Load the trained models
+cardio_model = joblib.load("cardio_model.joblib")
+stroke_model = joblib.load("stroke_model.joblib")
+diabetes_model = joblib.load("diabetes_model.joblib")
+
+# Create the Streamlit app
+st.title("Health Prediction App")
 
 # Define the input fields
 with st.form(key="user_form"):
@@ -98,7 +96,6 @@ def preprocess_input_for_cardio(gender, age, cholesterol, blood_glucose_level, s
         'Physical Activity': [physical_activity_encoded]
     })
 
-
 def preprocess_input_for_stroke(gender, age, hypertension, heart_disease, ever_married, work_type, residence_type,
                                 blood_glucose_level, bmi, smoking_status):
     gender_encoded = 1 if gender == 'Male' else 0
@@ -122,7 +119,6 @@ def preprocess_input_for_stroke(gender, age, hypertension, heart_disease, ever_m
         'BMI': [bmi],
         'Smoking_Status': [smoking_status_encoded]
     })
-
 
 def preprocess_input_for_diabetes(gender, age, hypertension, heart_disease, smoking_status, bmi, HbA1c_level,
                                   blood_glucose_level):
@@ -150,6 +146,19 @@ def make_predictions(model, input_data, condition_name):
     st.write(f"Predicted probability of {condition_name}: {predicted_prob_percent[0]:.2f}%")
     return predicted_prob_percent[0]
 
+# Append data to Google Sheets
+def append_to_sheet(data):
+    # Authenticate and create a client to interact with Google Sheets
+    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+    credentials = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
+    client = gspread.authorize(credentials)
+
+    # Open the Google Sheet
+    sheet = client.open("Your_Sheet_Name").worksheet("WellAI")
+
+    # Append the data
+    sheet.append_row(data.values.flatten().tolist())
+
 # If the submit button is pressed
 if submit_button:
     # Check if all mandatory fields are filled
@@ -172,7 +181,7 @@ if submit_button:
                                                             HbA1c_level, blood_glucose_level)
         diabetes_prob = make_predictions(diabetes_model, diabetes_input_data, "diabetes")
 
-        # Append the predictions to the user data
+        # Prepare data for Google Sheets
         new_user_data = pd.DataFrame({
             "Name": [name],
             "Address": [address],
@@ -196,8 +205,8 @@ if submit_button:
             "Diabetes_Probability": [diabetes_prob]
         })
 
-        # Update Google Sheets with the new user data
-        conn.update(worksheet="WellAI", data=new_user_data)
+        # Append data to Google Sheets
+        append_to_sheet(new_user_data)
 
         # Display success message
         st.success("Your details and predictions have been successfully submitted!")
