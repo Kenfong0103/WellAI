@@ -196,14 +196,8 @@ if submit_button:
             "Diabetes_Probability": [diabetes_prob]
         })
 
-        # Read the existing data from Google Sheets
-        sheet_df = conn.read(worksheet="WellAI")
-
-        # Append new data to the existing data
-        updated_df = pd.concat([sheet_df, new_user_data], ignore_index=True)
-
-        # Update Google Sheets with the combined data
-        conn.update(worksheet="WellAI", data=updated_df)
+        # Update Google Sheets with the new user data
+        conn.update(worksheet="WellAI", data=new_user_data)
 
         # Display success message
         st.success("Your details and predictions have been successfully submitted!")
