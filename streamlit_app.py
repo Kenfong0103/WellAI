@@ -199,12 +199,19 @@ if submit_button:
         # Read existing data from the Google Sheets
         existing_data = conn.read(worksheet="WellAI")
 
+        st.write("Existing data:")
+        st.write(existing_data)
+
         if existing_data.empty:
             # If the sheet is empty, initialize with headers
+            st.write("Sheet is empty. Initializing with headers.")
             existing_data = pd.DataFrame(columns=new_user_data.columns)
         
         # Append the new user data to the existing data
         updated_data = pd.concat([existing_data, new_user_data], ignore_index=True)
+
+        st.write("Updated data:")
+        st.write(updated_data)
 
         # Update Google Sheets with the combined data
         conn.update(worksheet="WellAI", data=updated_data)
