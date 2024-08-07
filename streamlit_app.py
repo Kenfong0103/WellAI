@@ -7,9 +7,9 @@ import joblib
 conn = st.connection("gsheets", type=GSheetsConnection)
 
 # Load the trained models
-cardio_model = joblib.load("cardio_model.joblib")
-stroke_model = joblib.load("stroke_model.joblib")
-diabetes_model = joblib.load("diabetes_model.joblib")
+cardio_model = joblib.load("C:\\Users\\kenye\\Downloads\\cardio_model.joblib")
+stroke_model = joblib.load("C:\\Users\\kenye\\Downloads\\stroke_model.joblib")
+diabetes_model = joblib.load("C:\\Users\\kenye\\Downloads\\diabetes_model.joblib")
 
 # Create the Streamlit app
 st.title("Health Prediction App")
@@ -199,10 +199,6 @@ if submit_button:
         # Read existing data from the Google Sheets
         existing_data = conn.read(worksheet="WellAI")
 
-        if existing_data.empty:
-            # If the sheet is empty, initialize with headers
-            existing_data = pd.DataFrame(columns=new_user_data.columns)
-        
         # Append the new user data to the existing data
         updated_data = pd.concat([existing_data, new_user_data], ignore_index=True)
 
