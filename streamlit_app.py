@@ -207,4 +207,7 @@ if submit_button:
         updated_data = pd.concat([existing_data, new_user_data], ignore_index=True)
 
         # Update Google Sheets with the combined data
-        conn.update(worksheet="
+        conn.update(worksheet="WellAI", data=updated_data)
+
+        # Display success message
+        st.success("Your details and predictions have been successfully submitted!")
