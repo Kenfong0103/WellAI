@@ -197,7 +197,7 @@ if submit_button:
         })
 
         # Update Google Sheets with the new user data
-        conn.update(worksheet="WellAI", data=new_user_data)
+         conn.update(worksheet="WellAI", data=updated_data[columns_to_update])
 
         # Display success message
         st.success("Your details and predictions have been successfully submitted!")
