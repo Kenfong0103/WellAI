@@ -11,6 +11,12 @@ stroke_model = joblib.load("stroke_model.joblib")
 cardio_model = joblib.load("cardio_model.joblib")
 diabetes_model = joblib.load("diabetes_model.joblib")
 
+# Function to fetch existing user data from Google Sheets
+def fetch_existing_data():
+    existing_data = conn.read(worksheet="WellAI", ttl=5)
+    existing_data = existing_data.dropna(how="all")
+    return existing_data
+
 # Create the Streamlit app
 st.title("Health Prediction App")
 
@@ -50,6 +56,9 @@ binary_mapping = {
     'Yes': 1,
     'No': 0
 }
+
+# Fetch existing user data
+existing_data = fetch_existing_data()
 
 # Define the input fields
 with st.form(key="user_form"):
@@ -193,9 +202,6 @@ if submit_button:
             "Cardio_Probability": [cardio_prob],
             "Diabetes_Probability": [diabetes_prob]
         })
-        
-        # Read existing data from Google Sheets
-        existing_data = conn.read(worksheet="WellAI")
 
         # Append the new user data to the existing data
         updated_data = existing_data.append(new_user_data, ignore_index=True)
