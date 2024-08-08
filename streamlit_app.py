@@ -191,8 +191,8 @@ if submit_button:
             "Glucose": [blood_glucose_level],
             "AlcoholIntake": [alcohol_intake],
             "PhysicalActivity": [physical_activity],
-            "Cardio_Probability": [cardio_prob],
             "Stroke_Probability": [stroke_prob],
+            "Cardio_Probability": [cardio_prob],
             "Diabetes_Probability": [diabetes_prob]
         })
         
