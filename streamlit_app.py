@@ -7,8 +7,8 @@ import joblib
 conn = st.connection("gsheets", type=GSheetsConnection)
 
 # Load the trained models
-cardio_model = joblib.load("cardio_model.joblib")
 stroke_model = joblib.load("stroke_model.joblib")
+cardio_model = joblib.load("cardio_model.joblib")
 diabetes_model = joblib.load("diabetes_model.joblib")
 
 # Create the Streamlit app
@@ -79,26 +79,6 @@ with st.form(key="user_form"):
     submit_button = st.form_submit_button(label="Submit")
 
 # Preprocess the input data
-def preprocess_input_for_cardio(gender, age, cholesterol, blood_glucose_level, smoking_status, alcohol_intake,
-                                physical_activity):
-    gender_encoded = 1 if gender == 'Male' else 0
-    cholesterol_encoded = cholesterol_mapping[cholesterol]
-    glucose_encoded = glucose_mapping[blood_glucose_level]
-    smoking_status_encoded = smoking_status_mapping[smoking_status]
-    alcohol_intake_encoded = binary_mapping[alcohol_intake]
-    physical_activity_encoded = binary_mapping[physical_activity]
-
-    return pd.DataFrame({
-        'Age': [age],
-        'Gender': [gender_encoded],
-        'Cholesterol': [cholesterol_encoded],
-        'Glucose': [glucose_encoded],
-        'Smoking_Status': [smoking_status_encoded],
-        'Alcohol Intake': [alcohol_intake_encoded],
-        'Physical Activity': [physical_activity_encoded]
-    })
-
-
 def preprocess_input_for_stroke(gender, age, hypertension, heart_disease, ever_married, work_type, residence_type,
                                 blood_glucose_level, bmi, smoking_status):
     gender_encoded = 1 if gender == 'Male' else 0
@@ -122,7 +102,25 @@ def preprocess_input_for_stroke(gender, age, hypertension, heart_disease, ever_m
         'BMI': [bmi],
         'Smoking_Status': [smoking_status_encoded]
     })
+                                    
+def preprocess_input_for_cardio(gender, age, cholesterol, blood_glucose_level, smoking_status, alcohol_intake,
+                                physical_activity):
+    gender_encoded = 1 if gender == 'Male' else 0
+    cholesterol_encoded = cholesterol_mapping[cholesterol]
+    glucose_encoded = glucose_mapping[blood_glucose_level]
+    smoking_status_encoded = smoking_status_mapping[smoking_status]
+    alcohol_intake_encoded = binary_mapping[alcohol_intake]
+    physical_activity_encoded = binary_mapping[physical_activity]
 
+    return pd.DataFrame({
+        'Age': [age],
+        'Gender': [gender_encoded],
+        'Cholesterol': [cholesterol_encoded],
+        'Glucose': [glucose_encoded],
+        'Smoking_Status': [smoking_status_encoded],
+        'Alcohol Intake': [alcohol_intake_encoded],
+        'Physical Activity': [physical_activity_encoded]
+    })
 
 def preprocess_input_for_diabetes(gender, age, hypertension, heart_disease, smoking_status, bmi, HbA1c_level,
                                   blood_glucose_level):
@@ -157,15 +155,15 @@ if submit_button:
         st.warning("Ensure all mandatory fields are filled.")
         st.stop()
     else:
-        # Cardio prediction
-        cardio_input_data = preprocess_input_for_cardio(gender, age, cholesterol, blood_glucose_level, smoking_status,
-                                                        alcohol_intake, physical_activity)
-        cardio_prob = make_predictions(cardio_model, cardio_input_data, "cardio")
-
         # Stroke prediction
         stroke_input_data = preprocess_input_for_stroke(gender, age, hypertension, heart_disease, ever_married, work_type,
                                                         residence_type, blood_glucose_level, bmi, smoking_status)
         stroke_prob = make_predictions(stroke_model, stroke_input_data, "stroke")
+        
+        # Cardio prediction
+        cardio_input_data = preprocess_input_for_cardio(gender, age, cholesterol, blood_glucose_level, smoking_status,
+                                                        alcohol_intake, physical_activity)
+        cardio_prob = make_predictions(cardio_model, cardio_input_data, "cardio")
 
         # Diabetes prediction
         diabetes_input_data = preprocess_input_for_diabetes(gender, age, hypertension, heart_disease, smoking_status, bmi,
