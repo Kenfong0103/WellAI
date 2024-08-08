@@ -195,9 +195,18 @@ if submit_button:
             "Stroke_Probability": [stroke_prob],
             "Diabetes_Probability": [diabetes_prob]
         })
+        
+        # Append the new user data to the existing data
+        updated_data = existing_data.append(new_user_data, ignore_index=True)
 
+        # Select only the necessary columns for updating in Google Sheets
+        columns_to_update = ['Name', 'Address', 'ContactNumber', 'Gender', 'Age', 'Hypertension', 'HeartDisease',
+                            'EverMarried', 'WorkType', 'ResidenceType', 'BMI', 'SmokingStatus', 'HbA1cLevel',
+                            'Cholesterol', 'Glucose', 'AlcoholIntake', 'PhysicalActivity',
+                            'Stroke_Probability', 'Cardio_Probability', 'Diabetes_Probability']
+        
         # Update Google Sheets with the new user data
-         conn.update(worksheet="WellAI", data=updated_data[columns_to_update])
+        conn.update(worksheet="WellAI", data=updated_data[columns_to_update])
 
         # Display success message
         st.success("Your details and predictions have been successfully submitted!")
