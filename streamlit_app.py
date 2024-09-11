@@ -10,7 +10,7 @@ st.set_page_config(layout="wide")
 st.markdown("""
     <script>
     window.addEventListener('load', function() {
-        window.scrollTo(0, window.innerHeight * 0.1);  // Scroll down 10% of the viewport height
+        window.scrollTo(0, window.innerHeight * 0.5);  // Scroll down 10% of the viewport height
     });
     </script>
     """, unsafe_allow_html=True)
