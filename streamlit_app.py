@@ -10,7 +10,7 @@ st.set_page_config(layout="wide")
 st.markdown("""
     <style>
     .main {
-        height: 100vh;  /* Adjust this value to change screen height */
+        height: 50vh;  /* Adjust this value to change screen height */
         overflow-y: auto;  /* Enables scrolling if content exceeds screen */
     }
 
