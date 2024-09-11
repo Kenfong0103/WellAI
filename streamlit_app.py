@@ -6,15 +6,6 @@ import joblib
 # Set page layout to wide
 st.set_page_config(layout="wide")
 
-# Embed custom JavaScript to scroll down on page load
-components.html("""
-    <script>
-        window.onload = function() {
-            window.scrollTo(0, document.body.scrollHeight * 0.1);
-        };
-    </script>
-""", height=0)
-
 # Establishing a Google Sheets connection
 conn = st.connection("gsheets", type=GSheetsConnection)
 
