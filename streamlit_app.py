@@ -33,12 +33,6 @@ smoking_status_mapping = {
     'Smokes': 2
 }
 
-cholesterol_mapping = {
-    'Normal': 0,
-    'Above Normal': 1,
-    'Well Above Normal': 2
-}
-
 work_type_mapping = {
     'Private': 0,
     'Self-employed': 1,
@@ -78,7 +72,6 @@ with st.form(key="user_form"):
     work_type = st.selectbox('Work Type', list(work_type_mapping.keys()))
     residence_type = st.selectbox('Residence Type', list(residence_type_mapping.keys()))
     blood_glucose_level = st.selectbox('Blood Glucose Level Category', list(glucose_mapping.keys()))
-    cholesterol = st.selectbox('Cholesterol', list(cholesterol_mapping.keys()))
     smoking_status = st.selectbox('Smoking Status', list(smoking_status_mapping.keys()))
     alcohol_intake = st.selectbox('Alcohol Intake', ['Yes', 'No'])
     physical_activity = st.selectbox('Physical Activity', ['Yes', 'No'])
@@ -112,10 +105,9 @@ def preprocess_input_for_stroke(gender, age, hypertension, heart_disease, ever_m
         'Smoking_Status': [smoking_status_encoded]
     })
                                     
-def preprocess_input_for_cardio(gender, age, cholesterol, blood_glucose_level, smoking_status, alcohol_intake,
+def preprocess_input_for_cardio(gender, age, blood_glucose_level, smoking_status, alcohol_intake,
                                 physical_activity):
     gender_encoded = 1 if gender == 'Male' else 0
-    cholesterol_encoded = cholesterol_mapping[cholesterol]
     glucose_encoded = glucose_mapping[blood_glucose_level]
     smoking_status_encoded = smoking_status_mapping[smoking_status]
     alcohol_intake_encoded = binary_mapping[alcohol_intake]
@@ -124,7 +116,6 @@ def preprocess_input_for_cardio(gender, age, cholesterol, blood_glucose_level, s
     return pd.DataFrame({
         'Age': [age],
         'Gender': [gender_encoded],
-        'Cholesterol': [cholesterol_encoded],
         'Glucose': [glucose_encoded],
         'Smoking_Status': [smoking_status_encoded],
         'Alcohol Intake': [alcohol_intake_encoded],
@@ -170,7 +161,7 @@ if submit_button:
         stroke_prob = make_predictions(stroke_model, stroke_input_data, "stroke")
         
         # Cardio prediction
-        cardio_input_data = preprocess_input_for_cardio(gender, age, cholesterol, blood_glucose_level, smoking_status,
+        cardio_input_data = preprocess_input_for_cardio(gender, age, blood_glucose_level, smoking_status,
                                                         alcohol_intake, physical_activity)
         cardio_prob = make_predictions(cardio_model, cardio_input_data, "cardio")
 
@@ -194,7 +185,6 @@ if submit_button:
             "BMI": [bmi],
             "SmokingStatus": [smoking_status],
             "HbA1cLevel": [HbA1c_level],
-            "Cholesterol": [cholesterol],
             "Glucose": [blood_glucose_level],
             "AlcoholIntake": [alcohol_intake],
             "PhysicalActivity": [physical_activity],
