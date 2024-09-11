@@ -3,6 +3,9 @@ from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 import joblib
 
+# Set page layout to wide
+st.set_page_config(layout="wide")
+
 # Establishing a Google Sheets connection
 conn = st.connection("gsheets", type=GSheetsConnection)
 
@@ -54,33 +57,42 @@ binary_mapping = {
 # Fetch existing user data
 existing_data = fetch_existing_data()
 
-# Define the input fields
+# Define the input fields using two columns layout
 with st.form(key="user_form"):
-    # New fields
-    name = st.text_input(label="Your Name*")
-    address = st.text_area(label="Your Address")
-    contact_number = st.text_input(label="Contact Number (Example: 010-1234567)*", max_chars=12)
+    col1, col2, col3 = st.columns(3)
 
-    # Fill with leading zeros if necessary
-    contact_number = contact_number.zfill(11)
+    # Column 1 - Left
+    with col1:
+        name = st.text_input(label="Your Name*")
+        address = st.text_area(label="Your Address")
+        contact_number = st.text_input(label="Contact Number (Example: 010-1234567)*", max_chars=12)
+        
+        # Fill with leading zeros if necessary
+        contact_number = contact_number.zfill(11)
+        
+        gender = st.selectbox('Gender', ['Male', 'Female'])
+        age = st.number_input('Age', min_value=0, max_value=100, value=0)  # Changed from slider to number input
 
-    gender = st.selectbox('Gender', ['Male', 'Female'])
-    age = st.slider('Age', 0, 100, 0)
-    hypertension = st.selectbox('Hypertension', ['Yes', 'No'])
-    heart_disease = st.selectbox('Heart Disease', ['Yes', 'No'])
-    ever_married = st.selectbox('Ever Married', ['Yes', 'No'])
-    work_type = st.selectbox('Work Type', list(work_type_mapping.keys()))
-    residence_type = st.selectbox('Residence Type', list(residence_type_mapping.keys()))
-    blood_glucose_level = st.selectbox('Blood Glucose Level Category', list(glucose_mapping.keys()))
-    smoking_status = st.selectbox('Smoking Status', list(smoking_status_mapping.keys()))
-    alcohol_intake = st.selectbox('Alcohol Intake', ['Yes', 'No'])
-    physical_activity = st.selectbox('Physical Activity', ['Yes', 'No'])
-    bmi = st.number_input('BMI', min_value=0.0, max_value=50.0, value=0.0)
-    HbA1c_level = st.number_input('HbA1c Level', min_value=0.0, max_value=20.0, value=0.0)
+    # Column 2 - Right
+    with col2:
+        ever_married = st.selectbox('Ever Married', ['Yes', 'No'])
+        work_type = st.selectbox('Work Type', list(work_type_mapping.keys()))
+        residence_type = st.selectbox('Residence Type', list(residence_type_mapping.keys()))
+        smoking_status = st.selectbox('Smoking Status', list(smoking_status_mapping.keys()))
+        alcohol_intake = st.selectbox('Alcohol Intake', ['Yes', 'No'])
+        physical_activity = st.selectbox('Physical Activity', ['Yes', 'No'])
+
+    # Column 3 - Right
+    with col3:
+        hypertension = st.selectbox('Hypertension', ['Yes', 'No'])
+        heart_disease = st.selectbox('Heart Disease', ['Yes', 'No'])
+        blood_glucose_level = st.selectbox('Blood Glucose Level Category', list(glucose_mapping.keys()))
+        bmi = st.number_input('BMI', min_value=0.0, max_value=50.0, value=0.0)
+        HbA1c_level = st.number_input('HbA1c Level', min_value=0.0, max_value=20.0, value=0.0)
 
     submit_button = st.form_submit_button(label="Submit")
 
-# Preprocess the input data
+# Preprocess the input data (functions remain the same)
 def preprocess_input_for_stroke(gender, age, hypertension, heart_disease, ever_married, work_type, residence_type,
                                 blood_glucose_level, bmi, smoking_status):
     gender_encoded = 1 if gender == 'Male' else 0
@@ -104,7 +116,7 @@ def preprocess_input_for_stroke(gender, age, hypertension, heart_disease, ever_m
         'BMI': [bmi],
         'Smoking_Status': [smoking_status_encoded]
     })
-                                    
+
 def preprocess_input_for_cardio(gender, age, blood_glucose_level, smoking_status, alcohol_intake,
                                 physical_activity):
     gender_encoded = 1 if gender == 'Male' else 0
