@@ -6,14 +6,14 @@ import joblib
 # Set page layout to wide
 st.set_page_config(layout="wide")
 
-# Custom CSS to move the title up
+# Inject JavaScript for scrolling
 st.markdown("""
-    <style>
-        .css-18e3th9 {
-            padding-top: 500rem;  /* Adjust this value to move title closer to top */
-        }
-    </style>
-""", unsafe_allow_html=True)
+    <script>
+    window.addEventListener('load', function() {
+        window.scrollTo(0, window.innerHeight * 0.1);  // Scroll down 10% of the viewport height
+    });
+    </script>
+    """, unsafe_allow_html=True)
 
 # Establishing a Google Sheets connection
 conn = st.connection("gsheets", type=GSheetsConnection)
