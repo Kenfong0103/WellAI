@@ -6,22 +6,6 @@ import joblib
 # Set page layout to wide
 st.set_page_config(layout="wide")
 
-# Custom CSS to adjust padding and margins
-st.markdown(
-    """
-    <style>
-    .css-1l02zno {
-        padding: 90;
-        margin: 90;
-    }
-    .css-1d391kg {
-        padding-top: 90;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
 # Establishing a Google Sheets connection
 conn = st.connection("gsheets", type=GSheetsConnection)
 
