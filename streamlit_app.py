@@ -11,7 +11,7 @@ st.markdown("""
     <style>
     .main {
         height: 90vh;  /* Adjust this value to change screen height */
-        overflow-y: hidden;  /* Enables scrolling if content exceeds screen */
+        overflow-y: scroll;  /* Enables scrolling if content exceeds screen */
     }
 
     .stButton button {
