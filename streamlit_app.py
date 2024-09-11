@@ -10,8 +10,8 @@ st.set_page_config(layout="wide")
 st.markdown("""
     <style>
     .main {
-        height: 50vh;  /* Adjust this value to change screen height */
-        overflow-y: auto;  /* Enables scrolling if content exceeds screen */
+        height: 90vh;  /* Adjust this value to change screen height */
+        overflow-y: hidden;  /* Enables scrolling if content exceeds screen */
     }
 
     .stButton button {
