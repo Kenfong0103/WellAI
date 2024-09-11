@@ -199,7 +199,7 @@ if submit_button:
         # Select only the necessary columns for updating in Google Sheets
         columns_to_update = ['Name', 'Address', 'ContactNumber', 'Gender', 'Age', 'Hypertension', 'HeartDisease',
                             'EverMarried', 'WorkType', 'ResidenceType', 'BMI', 'SmokingStatus', 'HbA1cLevel',
-                            'Glucose', 'AlcoholIntake', 'PhysicalActivity',
+                            'Cholesterol', 'Glucose', 'AlcoholIntake', 'PhysicalActivity',
                             'Stroke_Probability', 'Cardio_Probability', 'Diabetes_Probability']
         
         # Update Google Sheets with the new user data
