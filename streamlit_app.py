@@ -6,14 +6,14 @@ import joblib
 # Set page layout to wide
 st.set_page_config(layout="wide")
 
-# Inject JavaScript for scrolling
+# Insert JavaScript to automatically scroll down
 st.markdown("""
     <script>
-    window.addEventListener('load', function() {
-        window.scrollTo(0, window.innerHeight * 0.5);  // Scroll down 10% of the viewport height
-    });
+    window.onload = function() {
+        window.scrollBy(0, window.innerHeight * 0.5);
+    };
     </script>
-    """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
 # Establishing a Google Sheets connection
 conn = st.connection("gsheets", type=GSheetsConnection)
