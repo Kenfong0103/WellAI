@@ -11,8 +11,8 @@ st.markdown(
     """
     <style>
     .css-1l02zno {
-        padding: 90;
-        margin: 0;
+        padding: 0;
+        margin: 90;
     }
     .css-1d391kg {
         padding-top: 0;
