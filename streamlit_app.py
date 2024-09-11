@@ -15,7 +15,7 @@ st.markdown(
         margin: 90;
     }
     .css-1d391kg {
-        padding-top: 0;
+        padding-top: 90;
     }
     </style>
     """,
