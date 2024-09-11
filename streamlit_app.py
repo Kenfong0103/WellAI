@@ -6,6 +6,20 @@ import joblib
 # Set page layout to wide
 st.set_page_config(layout="wide")
 
+# Inject custom CSS to adjust height
+st.markdown("""
+    <style>
+    .main {
+        height: 90vh;  /* Adjust this value to change screen height */
+        overflow-y: auto;  /* Enables scrolling if content exceeds screen */
+    }
+
+    .stButton button {
+        height: 3em;  /* Adjust the button height */
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
 # Establishing a Google Sheets connection
 conn = st.connection("gsheets", type=GSheetsConnection)
 
