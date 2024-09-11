@@ -10,7 +10,7 @@ st.set_page_config(layout="wide")
 st.markdown("""
     <script>
     window.onload = function() {
-        window.scrollBy(0, window.innerHeight * 0.5);
+        window.scrollBy(5, window.innerHeight * 0.5);
     };
     </script>
 """, unsafe_allow_html=True)
