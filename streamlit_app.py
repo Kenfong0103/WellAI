@@ -10,7 +10,7 @@ st.set_page_config(layout="wide")
 st.markdown("""
     <style>
         .css-18e3th9 {
-            padding-top: 1rem;  /* Adjust this value to move title closer to top */
+            padding-top: -10rem;  /* Adjust this value to move title closer to top */
         }
     </style>
 """, unsafe_allow_html=True)
