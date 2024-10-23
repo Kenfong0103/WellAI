@@ -10,13 +10,7 @@ st.set_page_config(layout="wide")
 st.markdown("""
     <style>
     .big-font {
-        font-size:25px !important;
-    }
-    .medium-font {
-        font-size:20px !important;
-    }
-    .small-font {
-        font-size:15px !important;
+        font-size:50px !important;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -36,7 +30,7 @@ def fetch_existing_data():
     return existing_data
 
 # Create the Streamlit app
-st.title("Health Prediction App")
+st.markdown('<h1 class="big-font">Health Prediction App</h1>', unsafe_allow_html=True)
 
 # Define mappings for categorical variables
 glucose_mapping = {
