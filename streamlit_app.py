@@ -6,15 +6,6 @@ import joblib
 # Set page layout to wide
 st.set_page_config(layout="wide")
 
-# Custom CSS to adjust font size
-st.markdown("""
-    <style>
-    .big-font {
-        font-size:25px !important;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
 # Establishing a Google Sheets connection
 conn = st.connection("gsheets", type=GSheetsConnection)
 
