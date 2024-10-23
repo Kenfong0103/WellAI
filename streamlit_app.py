@@ -100,7 +100,7 @@ with st.form(key="user_form"):
         HbA1c_level = st.number_input('HbA1c Level', min_value=0.0, max_value=20.0, value=0.0)
         
         # Adjust submit button position inside col3
-        col3_1, col3_2, col3_3 = st.columns([1, 1, 1])  # Adjust these values for positioning
+        col3_1, col3_2, col3_3 = st.columns([1, -10, 1])  # Adjust these values for positioning
         with col3_2:  # Place submit button in the middle column
             submit_button = st.form_submit_button(label="Submit")
 
