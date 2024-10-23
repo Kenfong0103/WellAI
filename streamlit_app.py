@@ -98,12 +98,9 @@ with st.form(key="user_form"):
         blood_glucose_level = st.selectbox('Blood Glucose Level Category', list(glucose_mapping.keys()))
         bmi = st.number_input('BMI', min_value=0.0, max_value=50.0, value=0.0)
         HbA1c_level = st.number_input('HbA1c Level', min_value=0.0, max_value=20.0, value=0.0)
-
-    # Columns for submit button
-    col4, col5 = st.columns([1, 0])  # Adjust these values to control alignment
-
-    with col5:
         submit_button = st.form_submit_button(label="Submit")
+
+        
 
 # Preprocess the input data (functions remain the same)
 def preprocess_input_for_stroke(gender, age, hypertension, heart_disease, ever_married, work_type, residence_type,
