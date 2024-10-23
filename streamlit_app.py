@@ -6,6 +6,21 @@ import joblib
 # Set page layout to wide
 st.set_page_config(layout="wide")
 
+# Custom CSS to adjust font size
+st.markdown("""
+    <style>
+    .big-font {
+        font-size:25px !important;
+    }
+    .medium-font {
+        font-size:20px !important;
+    }
+    .small-font {
+        font-size:15px !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
 # Establishing a Google Sheets connection
 conn = st.connection("gsheets", type=GSheetsConnection)
 
@@ -21,7 +36,7 @@ def fetch_existing_data():
     return existing_data
 
 # Create the Streamlit app
-st.title("Health Prediction App")
+st.markdown('<p class="big-font">Health Prediction App</p>', unsafe_allow_html=True)
 
 # Define mappings for categorical variables
 glucose_mapping = {
