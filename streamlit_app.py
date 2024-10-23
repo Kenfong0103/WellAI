@@ -36,7 +36,7 @@ def fetch_existing_data():
     return existing_data
 
 # Create the Streamlit app
-st.markdown('<p class="big-font">Health Prediction App</p>', unsafe_allow_html=True)
+st.markdown('<p>Health Prediction App</p>', unsafe_allow_html=True)
 
 # Define mappings for categorical variables
 glucose_mapping = {
