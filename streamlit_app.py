@@ -91,7 +91,7 @@ with st.form(key="user_form"):
         HbA1c_level = st.number_input('HbA1c Level', min_value=0.0, max_value=20.0, value=0.0)
         
         
-            submit_button = st.form_submit_button(label="Submit")
+        submit_button = st.form_submit_button(label="Submit")
 
 # Preprocess the input data (functions remain the same)
 def preprocess_input_for_stroke(gender, age, hypertension, heart_disease, ever_married, work_type, residence_type,
