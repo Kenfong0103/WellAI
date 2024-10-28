@@ -1,0 +1,188 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    margin: auto;
+}
+
+.window {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2em; /* 调整标题字体大小 */
+    margin-bottom: 10px;
+}
+
+.selection {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    flex-wrap: wrap; /* 允许换行 */
+}
+
+.title {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px 20px; /* 调整水平内边距 */
+    font-size: 1.5em; /* 调整性别标题字体大小 */
+    text-align: left; /* 使标题靠左对齐 */
+    width: 40%; /* 确保宽度为100% */
+}
+
+.options {
+    display: flex;
+    justify-content: left;
+    margin-left: 3%;
+    font-size: 0.85em;
+    gap: 50px; /* 减小选项之间的间距 */
+    flex: 1; /* 允许选项区块填充剩余空间 */
+}
+
+.options-slider {
+    display: flex;
+    justify-content: center;
+    font-size: 0.85em;
+    gap: 50px; /* 减小选项之间的间距 */
+    flex: 1; /* 允许选项区块填充剩余空间 */
+}
+
+.slider {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+    margin-left: 3%;
+}
+
+.slider input[type="range"] {
+    flex-grow: 1;
+}
+
+.slider output {
+    min-width: 30px;
+    text-align: center;
+}
+
+.personal-info,
+.age-Physique,
+.life-events,
+.fitness,
+.lifestyle {
+    border: 2px solid #010101; /* 边框颜色 */
+    border-radius: 10px; /* 圆角 */
+    padding: 15px; /* 内边距 */
+    margin-bottom: 50px; /* 底部间距 */
+}
+
+label {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column; /* 让圆形和文本垂直排列 */
+    align-items: center;
+    font-size: 0.8em; /* 调整选项文本字体大小 */
+}
+
+input[type="radio"] {
+    display: none; /* 隐藏默认的圆形 */
+}
+
+.circle {
+    width: 40px; /* 调整圆形的宽度 */
+    height: 40px; /* 调整圆形的高度 */
+    border-radius: 50%;
+    border: 2px solid #007bff;
+    margin-bottom: 5px; /* 圆形和文本之间的间距 */
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* 居中对齐内容 */
+}
+
+input[type="text"] {
+    width: auto; /* Adjust to fit content */
+    padding: 10px; /* Add some padding */
+    border: 1px solid #ddd; /* Border styling */
+    border-radius: 5px; /* Rounded corners */
+    margin-left: 3%; /* Space between title and input box */
+    margin-top: 4%;
+    flex-grow: 1; /* Allow the input box to grow and take available space */
+}
+
+/* 勾选符号的样式 */
+input[type="radio"]:checked + .circle::after {
+    content: '✔'; /* 勾选符号 */
+    color: white; /* 符号颜色 */
+    position: absolute;
+    font-size: 18px; /* 勾选符号大小 */
+    font-weight: bold;
+}
+
+/* 圆形选中时的样式 */
+input[type="radio"]:checked + .circle {
+    background-color: #007bff; /* 圆形选中时的背景颜色 */
+}
+
+button {
+    padding: 10px 15px;
+    font-size: 1.2em; /* 调整按钮字体大小 */
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* 媒体查询 */
+@media (max-width: 700px) {
+    .slider {
+        width: 100%; /* Slider will expand to 100% width on small screens */
+    }
+
+    .selection {
+        flex-direction: column; /* 小屏幕时垂直排列 */
+        align-items: flex-start; /* 对齐到左边 */
+    }
+
+    .title {
+        margin-bottom: 10px; /* 增加下边距 */
+        width: 100%; /* 使标题宽度100% */
+        text-align: center; /* 中心对齐 */
+    }
+
+    .options {
+        justify-content: center; /* 在小屏幕上居中对齐选项 */
+        width: 100%; /* 选项宽度100% */
+    }
+
+    .options-slider {
+        justify-content: center; /* 在小屏幕上居中对齐选项 */
+        width: 100%; /* 选项宽度100% */
+    }
+    
+    input[type="text"]{ /* Include any other input types you have */
+        width: 95%; /* Set the input width to 100% */
+    }
+}
