@@ -15,7 +15,7 @@ body {
 
 .container {
     width: 100%;
-    max-width: 800px;
+    max-width: 750px;
     margin: auto;
 }
 
@@ -43,9 +43,9 @@ h1 {
     border: 1px solid #ddd;
     border-radius: 10px;
     padding: 10px 20px; /* 调整水平内边距 */
-    font-size: 1.5em; /* 调整性别标题字体大小 */
+    font-size: 1.2em; /* 调整性别标题字体大小 */
     text-align: left; /* 使标题靠左对齐 */
-    width: 40%; /* 确保宽度为100% */
+    width: 35%; /* 确保宽度为100% */
 }
 
 .options {
@@ -98,7 +98,7 @@ label {
     display: flex;
     flex-direction: column; /* 让圆形和文本垂直排列 */
     align-items: center;
-    font-size: 0.7em; /* 调整选项文本字体大小 */
+    font-size: 0.69em; /* 调整选项文本字体大小 */
 }
 
 input[type="radio"] {
@@ -156,7 +156,7 @@ button:hover {
 }
 
 /* 媒体查询 */
-@media (max-width: 700px) {
+@media (max-width: 650px) {
     .slider {
         width: 100%; /* Slider will expand to 100% width on small screens */
     }
