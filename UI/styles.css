@@ -15,7 +15,7 @@ body {
 
 .container {
     width: 100%;
-    max-width: 800px;
+    max-width: 1000px;
     margin: auto;
 }
 
@@ -156,7 +156,7 @@ button:hover {
 }
 
 /* 媒体查询 */
-@media (max-width: 700px) {
+@media (max-width: 900px) {
     .slider {
         width: 100%; /* Slider will expand to 100% width on small screens */
     }
