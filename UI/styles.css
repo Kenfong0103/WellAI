@@ -98,7 +98,7 @@ label {
     display: flex;
     flex-direction: column; /* 让圆形和文本垂直排列 */
     align-items: center;
-    font-size: 0.8em; /* 调整选项文本字体大小 */
+    font-size: 0.5em; /* 调整选项文本字体大小 */
 }
 
 input[type="radio"] {
