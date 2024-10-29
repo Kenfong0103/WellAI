@@ -53,7 +53,7 @@ h1 {
     justify-content: left;
     margin-left: 3%;
     font-size: 0.85em;
-    gap: 50px; /* 减小选项之间的间距 */
+    gap: 35px; /* 减小选项之间的间距 */
     flex: 1; /* 允许选项区块填充剩余空间 */
 }
 
@@ -98,7 +98,7 @@ label {
     display: flex;
     flex-direction: column; /* 让圆形和文本垂直排列 */
     align-items: center;
-    font-size: 0.5em; /* 调整选项文本字体大小 */
+    font-size: 0.7em; /* 调整选项文本字体大小 */
 }
 
 input[type="radio"] {
@@ -106,8 +106,8 @@ input[type="radio"] {
 }
 
 .circle {
-    width: 20px; /* 调整圆形的宽度 */
-    height: 20px; /* 调整圆形的高度 */
+    width: 28px; /* 调整圆形的宽度 */
+    height: 28px; /* 调整圆形的高度 */
     border-radius: 50%;
     border: 2px solid #007bff;
     margin-bottom: 5px; /* 圆形和文本之间的间距 */
