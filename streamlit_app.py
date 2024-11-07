@@ -1,6 +1,7 @@
 import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
+import xgboost as xgb
 import joblib
 
 # Set page layout to wide
