@@ -115,7 +115,7 @@ def preprocess_input_for_stroke(gender, age, hypertension, heart_disease, ever_m
     })
 
 def preprocess_input_for_cardio(gender, age, blood_glucose_level, smoking_status, alcohol_intake,
-                                physical_activity):
+                                physical_activity, bmi):
     gender_encoded = 1 if gender == 'Male' else 0
     glucose_encoded = glucose_mapping[blood_glucose_level]
     smoking_status_encoded = smoking_status_mapping[smoking_status]
@@ -128,7 +128,8 @@ def preprocess_input_for_cardio(gender, age, blood_glucose_level, smoking_status
         'Glucose': [glucose_encoded],
         'Smoking_Status': [smoking_status_encoded],
         'Alcohol Intake': [alcohol_intake_encoded],
-        'Physical Activity': [physical_activity_encoded]
+        'Physical Activity': [physical_activity_encoded],
+        'BMI': [bmi]
     })
 
 def preprocess_input_for_diabetes(gender, age, hypertension, heart_disease, smoking_status, bmi, HbA1c_level,
@@ -171,7 +172,7 @@ if submit_button:
         
         # Cardio prediction
         cardio_input_data = preprocess_input_for_cardio(gender, age, blood_glucose_level, smoking_status,
-                                                        alcohol_intake, physical_activity)
+                                                        alcohol_intake, physical_activity, bmi)
         cardio_prob = make_predictions(cardio_model, cardio_input_data, "cardio")
 
         # Diabetes prediction
