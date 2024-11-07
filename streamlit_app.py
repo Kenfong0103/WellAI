@@ -37,11 +37,8 @@ smoking_status_mapping = {
 }
 
 work_type_mapping = {
-    'Private': 0,
-    'Self-employed': 1,
-    'Govt_job': 2,
-    'children': 3,
-    'Never_worked': 4
+    'Currently No Working': 0,
+    'Currently Working': 1
 }
 
 residence_type_mapping = {
