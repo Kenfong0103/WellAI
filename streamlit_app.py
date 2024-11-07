@@ -10,9 +10,9 @@ st.set_page_config(layout="wide")
 conn = st.connection("gsheets", type=GSheetsConnection)
 
 # Load the trained models
-stroke_model = joblib.load("model_stroke.joblib")
-cardio_model = joblib.load("model_cardio.joblib")
-diabetes_model = joblib.load("model_diabetes.joblib")
+stroke_model = joblib.load("model_stroke1.joblib")
+cardio_model = joblib.load("model_cardio1.joblib")
+diabetes_model = joblib.load("model_diabetes1.joblib")
 
 # Function to fetch existing user data from Google Sheets
 def fetch_existing_data():
