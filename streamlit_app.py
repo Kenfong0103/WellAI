@@ -73,7 +73,7 @@ with st.form(key="user_form"):
     # Column 2 - Right
     with col2:
         ever_married = st.selectbox('Ever Married', ['Yes', 'No'])
-        work_type = st.selectbox('Work Type', list(work_type_mapping.keys()))
+        work_type = st.selectbox('Work Status', list(work_type_mapping.keys()))
         residence_type = st.selectbox('Residence Type', list(residence_type_mapping.keys()))
         smoking_status = st.selectbox('Smoking Status', list(smoking_status_mapping.keys()))
         alcohol_intake = st.selectbox('Alcohol Intake', ['Yes', 'No'])
@@ -188,7 +188,7 @@ if submit_button:
             "Hypertension": [hypertension],
             "HeartDisease": [heart_disease],
             "EverMarried": [ever_married],
-            "WorkType": [work_type],
+            "WorkStatus": [work_type],
             "ResidenceType": [residence_type],
             "BMI": [bmi],
             "SmokingStatus": [smoking_status],
@@ -206,7 +206,7 @@ if submit_button:
 
         # Select only the necessary columns for updating in Google Sheets
         columns_to_update = ['Name', 'Address', 'ContactNumber', 'Gender', 'Age', 'Hypertension', 'HeartDisease',
-                            'EverMarried', 'WorkType', 'ResidenceType', 'BMI', 'SmokingStatus', 'HbA1cLevel',
+                            'EverMarried', 'WorkStatus', 'ResidenceType', 'BMI', 'SmokingStatus', 'HbA1cLevel',
                             'Cholesterol', 'Glucose', 'AlcoholIntake', 'PhysicalActivity',
                             'Stroke_Probability', 'Cardio_Probability', 'Diabetes_Probability']
         
