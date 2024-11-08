@@ -132,11 +132,9 @@ def preprocess_input_for_cardio(gender, age, blood_glucose_level, smoking_status
         'BMI': [bmi]
     })
 
-def preprocess_input_for_diabetes(gender, age, hypertension, heart_disease, smoking_status, bmi, HbA1c_level,
+def preprocess_input_for_diabetes(gender, age, smoking_status, bmi, HbA1c_level,
                                   blood_glucose_level):
     gender_encoded = 1 if gender == 'Male' else 0
-    hypertension_encoded = binary_mapping[hypertension]
-    heart_disease_encoded = binary_mapping[heart_disease]
     smoking_status_encoded = smoking_status_mapping[smoking_status]
     glucose_encoded = glucose_mapping[blood_glucose_level]
 
