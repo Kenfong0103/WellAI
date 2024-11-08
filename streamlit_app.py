@@ -141,8 +141,6 @@ def preprocess_input_for_diabetes(gender, age, smoking_status, bmi, HbA1c_level,
     return pd.DataFrame({
         'Gender': [gender_encoded],
         'Age': [age],
-        'Hypertension': [hypertension_encoded],
-        'Heart_disease': [heart_disease_encoded],
         'Smoking_Status': [smoking_status_encoded],
         'BMI': [bmi],
         'HbA1c_level': [HbA1c_level],
