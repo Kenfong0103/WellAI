@@ -172,7 +172,7 @@ if submit_button:
         cardio_prob = make_predictions(cardio_model, cardio_input_data, "cardio")
 
         # Diabetes prediction
-        diabetes_input_data = preprocess_input_for_diabetes(gender, age, hypertension, heart_disease, smoking_status, bmi,
+        diabetes_input_data = preprocess_input_for_diabetes(gender, age, smoking_status, bmi,
                                                             HbA1c_level, blood_glucose_level)
         diabetes_prob = make_predictions(diabetes_model, diabetes_input_data, "diabetes")
 
