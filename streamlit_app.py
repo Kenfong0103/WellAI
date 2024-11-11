@@ -90,13 +90,8 @@ with st.form(key="user_form"):
         submit_button = st.form_submit_button(label="Submit")
 
 # Preprocess the input data (functions remain the same)
-def preprocess_input_for_stroke(gender, age, hypertension, heart_disease, ever_married, work_type, residence_type,
-                                blood_glucose_level, bmi, smoking_status):
+def preprocess_input_for_stroke(gender, age, residence_type, blood_glucose_level, bmi, smoking_status, HbA1c_level):
     gender_encoded = 1 if gender == 'Male' else 0
-    hypertension_encoded = binary_mapping[hypertension]
-    heart_disease_encoded = binary_mapping[heart_disease]
-    ever_married_encoded = binary_mapping[ever_married]
-    work_type_encoded = work_type_mapping[work_type]
     residence_type_encoded = residence_type_mapping[residence_type]
     glucose_encoded = glucose_mapping[blood_glucose_level]
     smoking_status_encoded = smoking_status_mapping[smoking_status]
@@ -104,14 +99,11 @@ def preprocess_input_for_stroke(gender, age, hypertension, heart_disease, ever_m
     return pd.DataFrame({
         'Gender': [gender_encoded],
         'Age': [age],
-        'Hypertension': [hypertension_encoded],
-        'Heart_disease': [heart_disease_encoded],
-        'Ever_Married': [ever_married_encoded],
-        'Work_Type': [work_type_encoded],
-        'Residence_Type': [residence_type_encoded],
+        'Residence_type': [residence_type_encoded],
         'Glucose': [glucose_encoded],
         'BMI': [bmi],
-        'Smoking_Status': [smoking_status_encoded]
+        'Smoking_Status': [smoking_status_encoded],
+        'HbA1c_level': [HbA1c_level]
     })
 
 def preprocess_input_for_cardio(gender, age, blood_glucose_level, smoking_status, alcohol_intake,
@@ -162,8 +154,7 @@ if submit_button:
         st.stop()
     else:
         # Stroke prediction
-        stroke_input_data = preprocess_input_for_stroke(gender, age, hypertension, heart_disease, ever_married, work_type,
-                                                        residence_type, blood_glucose_level, bmi, smoking_status)
+        stroke_input_data = preprocess_input_for_stroke(gender, age, residence_type, blood_glucose_level, bmi, smoking_status)
         stroke_prob = make_predictions(stroke_model, stroke_input_data, "stroke")
         
         # Cardio prediction
@@ -172,8 +163,7 @@ if submit_button:
         cardio_prob = make_predictions(cardio_model, cardio_input_data, "cardio")
 
         # Diabetes prediction
-        diabetes_input_data = preprocess_input_for_diabetes(gender, age, smoking_status, bmi,
-                                                            HbA1c_level, blood_glucose_level)
+        diabetes_input_data = preprocess_input_for_diabetes(gender, age, smoking_status, bmi, HbA1c_level, blood_glucose_level)
         diabetes_prob = make_predictions(diabetes_model, diabetes_input_data, "diabetes")
 
         # Append the predictions to the user data
