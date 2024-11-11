@@ -154,7 +154,7 @@ if submit_button:
         st.stop()
     else:
         # Stroke prediction
-        stroke_input_data = preprocess_input_for_stroke(gender, age, residence_type, blood_glucose_level, bmi, smoking_status)
+        stroke_input_data = preprocess_input_for_stroke(gender, age, residence_type, blood_glucose_level, bmi, smoking_status, HbA1c_level)
         stroke_prob = make_predictions(stroke_model, stroke_input_data, "stroke")
         
         # Cardio prediction
